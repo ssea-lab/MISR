@@ -1,0 +1,4 @@
+{
+  "train_predict_new.py::test_inceptionCF": true,
+  "train_predict_new.py::test_para": true
+}
