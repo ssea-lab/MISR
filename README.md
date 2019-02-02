@@ -1,2 +1,1 @@
-# MISR
-With the rapid development of service-oriented computing, building service-based systems (SBSs) become increasingly popular. How to find and recommend appropriate component services for developers becomes a vital issue in SBS development. In particular, since the SBS to develop usually contains no component service, it is a new “user” to the service recommendation system. To address this new user cold-start issue, we propose a deep interaction-oriented service recommendation approach, which incorporates three kinds of interactions between services and SBSs into a deep neural network. We aim to leverage the powerful representation learning abilities provided by deep learning to learn hidden structures from various interactions.
+
