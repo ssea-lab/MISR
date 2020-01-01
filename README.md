@@ -6,6 +6,6 @@ Yutao Ma, Xiao Geng, and Jian Wang. A Deep Neural Network with Multiplex Interac
 
 
 # Requirements
-1.Python version >= 3.6.5
-2.Tensorflow >= 1.9.0
-3.Keras >= 2.2.0
+1. Python version >= 3.6.5
+2. Tensorflow >= 1.9.0
+3. Keras >= 2.2.0
