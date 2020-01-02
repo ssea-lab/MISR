@@ -11,4 +11,4 @@ Yutao Ma, Xiao Geng, and Jian Wang. A Deep Neural Network with Multiplex Interac
 2. Tensorflow >= 1.9.0
 3. Keras >= 2.2.0
 4. gensim 
-
+5. nltk.data,nltk.corpus,nltk.tokenize
