@@ -10,12 +10,12 @@ from mf.Node2Vec import  call_node2vec, args
 def get_UV(data_path, mode, train_mashup_api_list):
     """
 
-    :param data_path: 对哪种划分
-    :param mode: 使用哪种矩阵分解方法
+    :param data_path: 
+    :param mode: 使用哪种矩阵分解方法或node2vec
     :param train_mashup_api_list: 训练集
     :return:
     """
-    MF_path=os.path.join(data_path,'U_V',mode)  # eg:C:\Users\xiaot\Desktop\MF+CNN\GX\data\split_data\cold_start\U_V\pmf\
+    MF_path=os.path.join(data_path,'U_V',mode)  # eg:..\data\split_data\cold_start\U_V\node2vec\
 
     if not os.path.exists(MF_path):
         os.mkdir(MF_path)
@@ -27,36 +27,14 @@ def get_UV(data_path, mode, train_mashup_api_list):
     m_embeddings, a_embeddings =None,None
     if mode=='Node2vec':
         m_embeddings, a_embeddings=get_UV_from_Node2vec(MF_path,train_mashup_api_list)
-    else:
-        m_embeddings=get_UV_from_librec(MF_path, "mashup", m_ids)
-        a_embeddings=get_UV_from_librec(MF_path, "api", a_ids)
+#     else: # 可以使用其他矩阵分解方式
+#         m_embeddings=get_UV_from_librec(MF_path, "mashup", m_ids)
+#         a_embeddings=get_UV_from_librec(MF_path, "api", a_ids)
     return m_embeddings,m_ids,a_embeddings,a_ids
-
-
-def get_UV_from_librec(MF_path, user_or_item, ordered_ids):
-    """
-    返回从librec得到的结果，按照id大小排列
-    :param MF_path:
-    :param user_or_item:
-    :param ordered_ids: 一般是按照mashup，api的id从大到小排列的
-    :return:
-    """
-    if user_or_item=="mashup":
-        id2index_path=MF_path + "/userIdToIndex.csv"
-        matrix_path=MF_path+"/U.txt"
-    elif user_or_item == "api":
-        id2index_path = MF_path + "/itemIdToIndex.csv"
-        matrix_path = MF_path + "/V.txt"
-
-    matrix=np.loadtxt(matrix_path)
-    id2index=get_id2index(id2index_path)
-    ordered_numpy=np.array([matrix[id2index[id]] for id in ordered_ids])
-    return ordered_numpy
-
 
 def prepare_data_for_Node2vec(a_args,train_mashup_api_list):
     """
-    :param train_mashup_api_list: # 需传入内部索引？？？外部
+    :param train_mashup_api_list
     :return:
     """
     m_ids,a_ids=zip(*train_mashup_api_list)
