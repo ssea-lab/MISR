@@ -10,7 +10,7 @@ keras_filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~\t\n'
 
 class encoding_padding(object):
     """
-    预处理文本，根据词频对词汇编码，得到文本（新，旧）的词汇index形式的编码
+    预处理文本，根据词频对词汇编码，并对文本编码
     """
     def __init__(self,descriptions,remove_punctuation):
         self.word2index =None
@@ -20,7 +20,7 @@ class encoding_padding(object):
     def process_text(self,descriptions,remove_punctuation):
         """
         process descriptions
-        默认按照文本中词频建立词典   0空白 1 最高频词汇 ....！
+        默认按照文本中词频建立词典   0空白 1 最高频词汇 ....
         :return:
         """
 
@@ -33,21 +33,8 @@ class encoding_padding(object):
 
         # 字典，将单词（字符串）映射为索引
         self.word2index = tokenizer.word_index
-        print('word2index:')
-        # print(self.word2index)
-        """
-        with open('../data/word2index','w',encoding='utf-8') as f:
-            for word,index in self.word2index.items():
-                f.write('{} {}\n'.format(word,index))
-        """
         print('Found %s unique tokens.' % len(self.word2index))
-
         self.texts_in_index = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)  # 开头用0（index）填充
-
-        """
-        np.savetxt('../data/keras_encoding_texts',self.texts_in_index,fmt='%d')
-        print('save keras_encoding_texts,done!')
-        """
 
     def get_texts_in_index(self, alist,manner,start_index=0):
         """
@@ -76,7 +63,7 @@ class encoding_padding(object):
 
     def get_text_in_index2(self,word_list):
         """
-        根据 word2index将文本转化为index并padding
+        自实现编码：根据 word2index将文本转化为index并padding
         :param word_list:
         :return:
         """
