@@ -72,7 +72,7 @@ def get_embedding_matrix(word2index, embedding_name, dimension=50):
     embedding=get_embedding(embedding_name, dimension)
     # construct an embedding_matrix
     num_words = len(word2index)+1  # 实际词典大小 +1
-    embedding_matrix = np.zeros((num_words, dimension))  # 随机？？？
+    embedding_matrix = np.zeros((num_words, dimension)) 
     for word, index in word2index.items(): # keras 文本预处理后得到的字典 按词频 对单词编码
         embedding_matrix[index]=get_word_embedding(embedding, embedding_name, word, dimension)
     return embedding_matrix
