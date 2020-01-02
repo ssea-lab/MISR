@@ -90,19 +90,6 @@ class process_data(object):
             pickle.dump(mashup_name2index, file)
         with open(os.path.join(self.base_dir, 'api_name2index'), 'wb') as file:
             pickle.dump(api_name2index, file)
-
-        """
-        # 存储mashup/api  name到id的映射   不使用，太麻烦
-        with open(os.root_path.join(self.data_dir, 'mashup_name2index.csv'), 'w+',encoding='utf-8') as f1: # 一些字符是utf-16的,16能表示这些字符但是不能写,换格，所以还是用8
-            f1.write("{},{}\n".format('mashup_name', 'mashup_id'))
-            for mashup_name, mashup_id in mashup_name2index.items():
-                print(mashup_name)
-                f1.write("{},{}\n".format(mashup_name, mashup_id))
-        with open(os.root_path.join(self.data_dir, 'api_name2index.csv'), 'w+',encoding='utf-8') as f2:
-            f2.write("{},{}\n".format('api_name', 'api_id'))
-            for api_name, api_id in api_name2index.items():
-                f2.write("{},{}\n".format(api_name, api_id))
-        """
         print("write index2name,done!")
         print("Num of mashup:{},Num of api:{}!".format(len(mashup_name2index),len(api_name2index)))
 
@@ -146,25 +133,8 @@ class process_data(object):
                 a_map[index]=name
         return a_map if index2name else name2index
 
-
-        """
-        #csv版本，不使用
-        id_column = mashup_or_api + '_id'
-        name_column = mashup_or_api + '_name'
-        
-        reader = csv.DictReader(open(os.root_path.join(self.data_dir, map_path), 'r',encoding='utf-8'))  # r
-        for row in reader:
-            if index2name:
-                # eg: mashup_map [int(row['mashup_id'])]= row['mashup_name']
-                a_map[int(row[id_column])] = row[name_column]
-            else:
-                a_map[row[name_column]] = int(row[id_column])
-        """
-        return a_map
-
     def get_mashup_api_id2info(self, mashup_or_api):
         # 返回由id直接得到info的dict  用在将关系对和对应的text输入模型
-        # 问题，有的
 
         if not (mashup_or_api == 'mashup' or mashup_or_api == 'api'):
             raise ValueError("must input 'mashup' or 'api' ")
@@ -206,9 +176,10 @@ class process_data(object):
 
         return a_list if manner == 'list' else a_dict
 
-    def get_api_co_vecs(self,pop_mode=''): # pop数值是否规约到0-1？？？ 要改动
+    def get_api_co_vecs(self,pop_mode=''): 
         """
         返回每个api跟所有api的共现次数向量和每个api的popularity
+        可选择mode将其规约到0-1区间
         :return:
         """
         all_api_num=len(self.get_mashup_api_index2name('api'))
@@ -296,29 +267,12 @@ def NLP_tool(raw_description, SpellCheck=False):  # 功能需进一步确认！�
     return [[],[]...]
     """
 
-    """ 拼写检查
-    d=None
-    if SpellCheck:
-        d = enchant.Dict("en_US")
-    """
-
-    # st = LancasterStemmer()  # 词干分析器
-
     words = []
-    """ 
-    line = re.sub(punctuaion, ' ', text)  # 不去标点，标点有一定含义
-    words= line.split()
-    """
     for sentence in tokenizer.tokenize(raw_description):  # 分句再分词
         #for word in WordPunctTokenizer().tokenize(sentence): #分词更严格，eg:top-rated会分开
         for word in word_tokenize(sentence):
             word=word.lower()
             if word not in english_stopwords and word not in domain_stopwords:  # 非停用词
-                """
-                if SpellCheck and not d.check(word):#拼写错误，使用第一个选择替换？还是直接代替？
-                    word=d.suggest(word.lower())[0]
-                """
-                # word = st.stem(word)   词干化，词干在预训练中不存在怎么办? 所以暂不使用
                 words.append(word)
 
     return words
@@ -329,10 +283,6 @@ def test_NLP(text):
         for word in WordPunctTokenizer().tokenize(sentence):
             print(word + "\n")
 
-def test_utf():
-    data_path = r'../mashup/%E2%96%B2hail'
-    with open(data_path,encoding='utf-8') as f:
-        print(f.readline())
 
 if __name__ == '__main__':
     # test_NLP('i love you, New York.')
@@ -340,23 +290,3 @@ if __name__ == '__main__':
     test_data_dir = r'../test_data'
     real_data_dir= r'../data'
     pd = process_data(real_data_dir,True) #
-
-    """
-    for name, info in pd.get_mashup_api_info('mashup').items():
-        print(name,info.get('final_description'))
-    for name, info in pd.get_mashup_api_info('api').items():
-        print(name, info.get('final_description'))
-        print(name, info.get('Secondary Categories'))
-    """
-
-    """
-    mashup_api_pairs = pd.get_mashup_api_pair('list')
-    print(mashup_api_pairs)
-    # 不存在信息的mashup/api的info获取
-    name2info = pd.get_mashup_api_info('api')
-    print(name2info)
-    
-    api_id2info=pd.get_mashup_api_id2info('api')
-    for id, info in api_id2info.items():
-        print(info.get('final_description'))
-    """
